@@ -1,0 +1,459 @@
+/* ════════════════════════════════════════════════════════════
+   SIGA-MF | Admin — Estilos
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  --roxo-fundo: #1D1A39;
+  --vinho-escuro: #451952;
+  --vinho: #662549;
+  --rosa: #AE445A;
+  --laranja: #F39F5A;
+  --blush: #E8BCB9;
+  --branco: #FFFFFF;
+  --cinza-claro: #F5F3F7;
+  --cinza-medio: #E0DAE8;
+  --cinza-texto: #4A4060;
+  --sidebar-w: 240px;
+  --sombra: 0 4px 16px rgba(29,26,57,0.13);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.2s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: var(--cinza-claro);
+  color: var(--cinza-texto);
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--roxo-fundo);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 200;
+  transition: transform var(--transition);
+  box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+}
+.sidebar-brand {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.sidebar-logo  { font-size: 1.8rem; line-height: 1; }
+.sidebar-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.02em; }
+.sidebar-sub   { font-size: 0.72rem; opacity: 0.6; }
+.sidebar-nav   { flex: 1; padding: 16px 0; overflow-y: auto; }
+.nav-section-label {
+  font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em;
+  opacity: 0.5; padding: 12px 20px 6px; font-weight: 700;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 20px; cursor: pointer;
+  font-size: 0.9rem; font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  border-left: 3px solid transparent;
+  transition: var(--transition); user-select: none;
+}
+.nav-item:hover  { background: rgba(255,255,255,0.07); color: #fff; }
+.nav-item.active { background: rgba(243,159,90,0.15); color: var(--laranja); border-left-color: var(--laranja); }
+.nav-icon { font-size: 1.1rem; width: 22px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.75rem; opacity: 0.5; }
+.sidebar-toggle {
+  display: none;
+  position: fixed; top: 14px; left: 14px; z-index: 300;
+  background: var(--roxo-fundo); border: none; color: #fff;
+  border-radius: 8px; width: 40px; height: 40px; font-size: 1.3rem;
+  cursor: pointer; align-items: center; justify-content: center;
+}
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 199; }
+.sidebar-overlay.show { display: block; }
+
+/* ── MAIN ── */
+.main-wrapper {
+  margin-left: var(--sidebar-w);
+  flex: 1; display: flex; flex-direction: column; min-height: 100vh;
+}
+.top-header {
+  background: var(--branco); border-bottom: 1px solid var(--cinza-medio);
+  padding: 0 28px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 1px 6px rgba(29,26,57,0.07);
+}
+#page-title { font-size: 1.1rem; font-weight: 800; color: var(--vinho-escuro); }
+.header-actions { display: flex; align-items: center; gap: 14px; }
+.badge-conexao { font-size: 0.72rem; padding: 4px 12px; border-radius: 20px; font-weight: 600; border: 1.5px solid; }
+.badge-conexao.online     { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+.badge-conexao.offline    { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+.badge-conexao.connecting { background: var(--cinza-medio); color: var(--cinza-texto); border-color: var(--cinza-medio); }
+.main-content { padding: 24px; flex: 1; }
+
+/* ── SEÇÕES ── */
+.section        { display: none; }
+.section.active { display: block; }
+
+/* ── KPI CARDS ── */
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--branco); border-radius: var(--radius); box-shadow: var(--sombra);
+  padding: 20px; display: flex; flex-direction: column; gap: 6px;
+  border-top: 4px solid var(--laranja); transition: var(--transition);
+}
+.kpi-card:hover { transform: translateY(-2px); }
+.kpi-card:nth-child(2) { border-top-color: var(--rosa); }
+.kpi-card:nth-child(3) { border-top-color: var(--vinho); }
+.kpi-card:nth-child(4) { border-top-color: var(--vinho-escuro); }
+.kpi-icon  { font-size: 1.6rem; }
+.kpi-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; color: #888; }
+.kpi-valor { font-size: 2rem; font-weight: 800; color: var(--vinho-escuro); line-height: 1; }
+.kpi-sub   { font-size: 0.78rem; color: #aaa; }
+
+/* ── CARDS GENÉRICOS ── */
+.card { background: var(--branco); border-radius: var(--radius); box-shadow: var(--sombra); overflow: hidden; margin-bottom: 20px; }
+.card-header {
+  background: linear-gradient(90deg, var(--vinho-escuro), var(--vinho)); color: var(--branco);
+  padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.card-header h2 { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.card-body { padding: 20px; }
+
+/* ── TABELAS ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.data-table th {
+  background: var(--cinza-claro); text-align: left;
+  padding: 10px 14px; font-weight: 700; color: var(--cinza-texto);
+  border-bottom: 2px solid var(--cinza-medio); white-space: nowrap;
+}
+.data-table td { padding: 10px 14px; border-bottom: 1px solid var(--cinza-medio); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #faf8ff; }
+.data-table-wrap { overflow-x: auto; }
+
+/* ── BADGES ── */
+.badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.04em; }
+.badge-ok      { background: #d4edda; color: #155724; }
+.badge-alerta  { background: #f8d7da; color: #721c24; animation: blink 1.5s infinite; }
+.badge-warning { background: #fff3cd; color: #856404; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+/* ── SWITCH ── */
+.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; inset: 0; background: #ccc; border-radius: 24px; cursor: pointer; transition: var(--transition); }
+.slider::before { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; left: 3px; bottom: 3px; transition: var(--transition); }
+input:checked + .slider { background: var(--vinho); }
+input:checked + .slider::before { transform: translateX(20px); }
+
+/* ── BOTÕES ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: var(--radius-sm);
+  font-size: 0.85rem; font-weight: 700; cursor: pointer;
+  border: none; transition: var(--transition); outline: none;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn-primary   { background: linear-gradient(135deg, var(--rosa), var(--vinho)); color: #fff; }
+.btn-secondary { background: var(--cinza-medio); color: var(--cinza-texto); }
+.btn-success   { background: #28a745; color: #fff; }
+.btn-danger    { background: var(--rosa); color: #fff; }
+.btn-sm        { padding: 5px 11px; font-size: 0.78rem; }
+
+/* ── FORMULÁRIOS ── */
+.form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.form-group label { font-size: 0.78rem; font-weight: 700; color: var(--cinza-texto); text-transform: uppercase; letter-spacing: 0.04em; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 9px 12px; border: 1.5px solid var(--cinza-medio);
+  border-radius: var(--radius-sm); font-size: 0.9rem;
+  color: var(--cinza-texto); background: var(--cinza-claro); outline: none; transition: var(--transition);
+}
+.form-group input:focus, .form-group select:focus { border-color: var(--rosa); background: #fff; }
+.form-row     { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 6px; }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(29,26,57,0.55); z-index: 500; display: none; align-items: center; justify-content: center; padding: 16px; }
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--branco); border-radius: var(--radius); box-shadow: 0 8px 40px rgba(29,26,57,0.35);
+  max-width: 580px; width: 100%; max-height: 90vh;
+  display: flex; flex-direction: column; animation: modal-in 0.25s ease;
+}
+@keyframes modal-in { from{opacity:0;transform:scale(0.94)} to{opacity:1;transform:scale(1)} }
+.modal-header {
+  background: linear-gradient(90deg, var(--vinho-escuro), var(--vinho)); color: #fff;
+  padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+.modal-header h3 { font-size: 1rem; font-weight: 700; }
+.modal-close { background: rgba(255,255,255,0.15); border: none; color: #fff; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+.modal-close:hover { background: rgba(255,255,255,0.3); }
+.modal-body   { padding: 22px; overflow-y: auto; flex: 1; }
+.modal-footer { padding: 14px 22px; border-top: 1px solid var(--cinza-medio); display: flex; justify-content: flex-end; gap: 10px; }
+
+#modal-insumo-rapido.modal-overlay { background: rgba(0, 0, 0, 0.4); }
+#modal-insumo-rapido .modal { border: 1px solid var(--cinza-medio); box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+
+/* ── MODAL CONFIRMAÇÃO (ESTILO ESCURO) ── */
+.confirm-modal {
+  background: var(--roxo-fundo);
+  color: var(--branco);
+  max-width: 420px !important;
+  text-align: left;
+  padding: 24px 28px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.confirm-modal h3 { font-size: 1.3rem; margin-bottom: 12px; font-weight: 700; display: flex; align-items: center; }
+.confirm-modal p { font-size: 0.95rem; color: rgba(255, 255, 255, 0.6); margin-bottom: 24px; line-height: 1.5; }
+.confirm-actions { display: flex; gap: 12px; }
+.confirm-btn-cancel { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); flex: 1; justify-content: center; padding: 12px; border-radius: 10px; }
+.confirm-btn-cancel:hover { background: rgba(255, 255, 255, 0.1); }
+.confirm-btn-ok { flex: 1; justify-content: center; padding: 12px; border-radius: 10px; }
+
+/* ── GRÁFICO CSS ── */
+.chart-wrapper { display: flex; flex-direction: column; gap: 10px; padding: 8px 0; }
+.chart-row  { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; }
+.chart-label { width: 110px; font-weight: 600; color: var(--cinza-texto); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chart-bar-wrap { flex: 1; background: var(--cinza-medio); border-radius: 6px; height: 22px; overflow: hidden; }
+.chart-bar { height: 100%; border-radius: 6px; transition: width 0.6s ease; min-width: 4px; }
+.chart-bar.bar-dinheiro { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+.chart-bar.bar-pix      { background: linear-gradient(90deg, #2980b9, #3498db); }
+.chart-bar.bar-credito  { background: linear-gradient(90deg, #f39c12, #f1c40f); }
+.chart-bar.bar-debito   { background: linear-gradient(90deg, var(--vinho-escuro), var(--rosa)); }
+.chart-bar.bar-voucher  { background: linear-gradient(90deg, var(--laranja), var(--blush)); }
+.chart-val { font-weight: 700; color: var(--vinho-escuro); font-size: 0.82rem; white-space: nowrap; }
+
+/* ── TOASTS ── */
+#toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; pointer-events: none; }
+.toast {
+  background: var(--roxo-fundo); color: #fff;
+  padding: 12px 20px; border-radius: var(--radius-sm);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3); font-size: 0.88rem; font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+  min-width: 260px; max-width: 380px; pointer-events: all;
+  animation: toast-in 0.3s ease; border-left: 5px solid var(--laranja);
+}
+.toast.success { border-left-color: #2ecc71; }
+.toast.error   { border-left-color: var(--rosa); background: var(--vinho); }
+.toast.warning { border-left-color: var(--laranja); }
+.toast.info    { border-left-color: #3498db; }
+@keyframes toast-in { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+
+/* ── LOADING ── */
+.loading-spin { display: inline-block; width: 18px; height: 18px; border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+.loading-spin.dark { border-color: var(--cinza-medio); border-top-color: var(--vinho); }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; color: #bbb; padding: 40px 20px; font-size: 0.9rem; }
+
+/* ── RESPONSIVO ── */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: flex; }
+  .main-wrapper { margin-left: 0; }
+  .top-header { padding: 0 14px 0 62px; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .main-content { padding: 14px; }
+}
+
+/* ── FILTRO DE DATA NO HEADER (PADRÃO SIGA-MF) ── */
+.header-filter-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  /* Removido o fundo "vidro". Agora ele usa o próprio fundo do cabeçalho */
+}
+
+.header-filter-group label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff; /* O texto fica branco puro para dar contraste com o vinho */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* O input com o mesmo padrão dos formulários do sistema */
+.date-input-custom {
+  background: var(--cinza-claro);
+  color: var(--cinza-texto);
+  border: 1.5px solid transparent;
+  padding: 0 12px;
+  height: 32px; /* Mesma altura exata do btn-sm */
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition);
+}
+
+.date-input-custom:hover, .date-input-custom:focus {
+  border-color: var(--laranja);
+  background: #fff;
+}
+
+/* ── RESPONSIVIDADE ── */
+@media (max-width: 576px) {
+  .header-filter-group {
+    width: 100%;
+    gap: 8px;
+  }
+  
+  .header-filter-group label {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+  
+  /* Faz o input e o botão dividirem o espaço igualmente no celular */
+  .date-input-custom, 
+  .header-filter-group .btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* ── CUSTOMIZAÇÃO DO CALENDÁRIO FLATPICKR (SIGA-MF) ── */
+.flatpickr-calendar {
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+  box-shadow: 0 10px 40px rgba(29, 26, 57, 0.25) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+/* O cabeçalho (Mês e Ano) com o degradê do sistema */
+.flatpickr-months .flatpickr-month,
+.flatpickr-weekdays {
+  background: linear-gradient(90deg, var(--vinho-escuro), var(--vinho)) !important;
+  color: #fff !important;
+  fill: #fff !important;
+}
+
+span.flatpickr-weekday {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 700 !important;
+}
+
+.flatpickr-current-month input.cur-year,
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  color: #fff !important;
+  font-weight: 800 !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* O dia selecionado com a cor rosa/laranja do sistema */
+.flatpickr-day.selected, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange, 
+.flatpickr-day.selected.inRange, 
+.flatpickr-day.startRange.inRange, 
+.flatpickr-day.endRange.inRange, 
+.flatpickr-day.selected:focus, 
+.flatpickr-day.startRange:focus, 
+.flatpickr-day.endRange:focus, 
+.flatpickr-day.selected:hover, 
+.flatpickr-day.startRange:hover, 
+.flatpickr-day.endRange:hover, 
+.flatpickr-day.selected.prevMonthDay, 
+.flatpickr-day.startRange.prevMonthDay, 
+.flatpickr-day.endRange.prevMonthDay, 
+.flatpickr-day.selected.nextMonthDay, 
+.flatpickr-day.startRange.nextMonthDay, 
+.flatpickr-day.endRange.nextMonthDay {
+  background: var(--rosa) !important;
+  border-color: var(--rosa) !important;
+  font-weight: 700;
+}
+
+.flatpickr-day:hover {
+  background: var(--cinza-medio) !important;
+  border-color: var(--cinza-medio) !important;
+}
+
+/* Ajusta o input nativo para esconder o ícone antigo do Chrome */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  opacity: 0;
+}
+
+/* ── ESTILO DO INPUT DO CALENDÁRIO NO CABEÇALHO ── */
+input.input-data-elegante,
+.flatpickr-input[readonly] {
+  background: rgba(255, 255, 255, 0.15) !important; /* Fundo levemente translúcido */
+  color: #fff !important; /* Texto branco */
+  border: 1px solid rgba(255, 255, 255, 0.3) !important; /* Bordinha suave */
+  border-radius: 6px !important;
+  padding: 0 12px !important;
+  height: 32px !important; /* Mesma altura do botão Atualizar */
+  font-family: inherit !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  outline: none !important;
+  text-align: center;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+  width: 130px;
+}
+
+.flatpickr-input[readonly]:hover {
+  background: rgba(255, 255, 255, 0.25) !important; /* Fica um pouco mais claro ao passar o mouse */
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ── CORREÇÃO DO MENU DE MESES (FLATPICKR) ── */
+.flatpickr-current-month .flatpickr-monthDropdown-months {
+  appearance: none; /* Esconde a setinha feia do navegador */
+  -webkit-appearance: none;
+  background: var(--vinho-escuro) !important; /* Fundo escuro */
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 6px !important;
+  padding: 2px 8px !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+}
+
+/* Pinta o fundo das opções (Janeiro, Fevereiro...) de escuro também */
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month {
+  background-color: var(--roxo-fundo) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months:hover {
+  background: var(--vinho) !important;
+}
+
+
+
+@media (max-width: 480px) { .kpi-grid { grid-template-columns: 1fr; } }

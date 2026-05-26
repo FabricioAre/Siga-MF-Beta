@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maria Fumaça — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo"><span class="material-symbols-outlined" style="font-size:32px;">train</span></div>
+    <div class="sidebar-title">Maria Fumaça</div>
+    <div class="sidebar-sub">SIGA-MF — Gestão</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section-label">Principal</div>
+    <div class="nav-item active" data-section="dashboard" onclick="navegarPara('dashboard')">
+      <span class="nav-icon"><span class="material-symbols-outlined" style="font-size:20px;">dashboard</span></span> Dashboard
+    </div>
+    <div class="nav-section-label">Operação</div>
+    <div class="nav-item" data-section="estoque" onclick="navegarPara('estoque')">
+      <span class="nav-icon"><span class="material-symbols-outlined" style="font-size:20px;">inventory_2</span></span> Estoque
+    </div>
+    <div class="nav-item" data-section="fichas" onclick="navegarPara('fichas')">
+      <span class="nav-icon"><span class="material-symbols-outlined" style="font-size:20px;">description</span></span> Fichas Técnicas
+    </div>
+    <div class="nav-item" data-section="cardapio" onclick="navegarPara('cardapio')">
+      <span class="nav-icon"><span class="material-symbols-outlined" style="font-size:20px;">restaurant_menu</span></span> Cardápio
+    </div>
+    <div class="nav-section-label">Análise</div>
+    <div class="nav-item" data-section="relatorios" onclick="navegarPara('relatorios')">
+      <span class="nav-icon"><span class="material-symbols-outlined" style="font-size:20px;">trending_up</span></span> Relatórios
+    </div>
+    <div class="nav-section-label">Sistema</div>
+    <div class="nav-item" data-section="usuarios" onclick="navegarPara('usuarios')">
+      <span class="nav-icon"><span class="material-symbols-outlined" style="font-size:20px;">group</span></span> Usuários
+    </div>
+  </nav>
+  <div class="sidebar-footer">SIGA-MF v1.0.0</div>
+</aside>
+
+<div class="modal-overlay" id="modal-insumo">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><span class="material-symbols-outlined" style="font-size:20px;">edit</span> Editar Insumo</h3>
+      <button class="modal-close" onclick="fecharModal('modal-insumo')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="insumo-edit-id" />
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nome do Insumo</label>
+          <input type="text" id="insumo-edit-nome" placeholder="Ex: Farinha de trigo" />
+        </div>
+        <div class="form-group">
+          <label>Unidade</label>
+          <select id="insumo-edit-unidade">
+            <option value="kg">kg</option><option value="g">g</option>
+            <option value="L">L</option><option value="ml">ml</option>
+            <option value="un">un</option><option value="cx">cx</option>
+            <option value="pct">pct</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Estoque Atual</label>
+          <input type="number" id="insumo-edit-atual" min="0" step="0.01" placeholder="0" />
+        </div>
+        <div class="form-group">
+          <label>Estoque Mínimo</label>
+          <input type="number" id="insumo-edit-minimo" min="0" step="0.01" placeholder="0" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Custo Unitário (R$)</label>
+        <input type="number" id="insumo-edit-custo" min="0" step="0.01" placeholder="0,00" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-insumo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarInsumo()"><span class="material-symbols-outlined" style="font-size:16px;">save</span> Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-lote">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><span class="material-symbols-outlined" style="font-size:20px;">move_to_inbox</span> Entrada de Lote (PEPS)</h3>
+      <button class="modal-close" onclick="fecharModal('modal-lote')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Insumo</label>
+        <div style="display: flex; gap: 8px;">
+          <select id="lote-insumo-id" style="flex: 1;">
+            <option value="">Selecione...</option>
+          </select>
+          <button class="btn btn-primary btn-sm" onclick="abrirNovoInsumoRapido()" type="button" title="Cadastrar novo insumo">+</button>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Quantidade</label><input type="number" id="lote-quantidade" min="0.01" step="0.01" placeholder="0" /></div>
+        <div class="form-group"><label>Custo Unitário (R$)</label><input type="number" id="lote-custo" min="0" step="0.01" placeholder="0,00" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Data de Entrada</label><input type="date" id="lote-data-entrada" /></div>
+        <div class="form-group"><label>Data de Validade</label><input type="date" id="lote-data-validade" /></div>
+      </div>
+      <div class="form-group"><label>Fornecedor</label><input type="text" id="lote-fornecedor" placeholder="Nome do fornecedor" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-lote')">Cancelar</button>
+      <button class="btn btn-success" onclick="salvarLote()"><span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Registrar Entrada</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-insumo-rapido" style="z-index: 600;">
+  <div class="modal" style="max-width: 420px;">
+    <div class="modal-header">
+      <h3><span class="material-symbols-outlined" style="font-size:20px;">add_circle</span> Novo Insumo</h3>
+      <button class="modal-close" onclick="fecharModal('modal-insumo-rapido')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Nome do Insumo</label>
+        <input type="text" id="insumo-rapido-nome" placeholder="Ex: Queijo Gorgonzola" />
+      </div>
+      <div class="form-group">
+        <label>Unidade</label>
+        <select id="insumo-rapido-unidade">
+          <option value="kg">kg</option>
+          <option value="g">g</option>
+          <option value="L">L</option>
+          <option value="un" selected>un</option>
+          <option value="pct">pct</option>
+        </select>
+      </div>
+      <p style="font-size: 0.75rem; color: var(--rosa); margin-top: 10px; font-weight: 600;">
+        * O custo e o estoque mínimo podem ser editados na lista geral.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-insumo-rapido')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarInsumoRapido()">
+        <span class="material-symbols-outlined" style="font-size:16px;">save</span> Salvar e Selecionar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ajuste">
+  <div class="modal">
+    <div class="modal-header">
+      <h3><span class="material-symbols-outlined" style="font-size:20px;">balance</span> Ajuste / Perda de Estoque</h3>
+      <button class="modal-close" onclick="fecharModal('modal-ajuste')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Insumo</label><select id="ajuste-insumo-id"><option value="">Selecione...</option></select></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Tipo</label>
+          <select id="ajuste-tipo">
+            <option value="perda">Perda</option>
+            <option value="ajuste_positivo">Ajuste Positivo</option>
+            <option value="ajuste_negativo">Ajuste Negativo</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Quantidade</label><input type="number" id="ajuste-quantidade" min="0.01" step="0.01" placeholder="0" /></div>
+      </div>
+      <div class="form-group"><label>Motivo</label><input type="text" id="ajuste-motivo" placeholder="Descreva o motivo..." /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-ajuste')">Cancelar</button>
+      <button class="btn btn-danger" onclick="salvarAjuste()"><span class="material-symbols-outlined" style="font-size:16px;">balance</span> Registrar Ajuste</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-produto">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-header">
+      <h3 id="modal-produto-titulo"><span class="material-symbols-outlined" style="font-size:20px;">add_circle</span> Novo Produto</h3>
+      <button class="modal-close" onclick="fecharModal('modal-produto')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="produto-id" />
+
+      <div class="form-group">
+        <label>Nome do Produto</label>
+        <input type="text" id="produto-nome" placeholder="Ex: Água com Gás 500ml" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Categoria</label>
+          <select id="produto-categoria"></select>
+        </div>
+        <div class="form-group">
+          <label>Preço (R$)</label>
+          <input type="number" id="produto-preco" min="0" step="0.01" placeholder="0,00" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Descrição (opcional)</label>
+        <input type="text" id="produto-descricao" placeholder="Breve descrição do produto" />
+      </div>
+      <div class="form-group">
+        <label>Observações Rápidas do Garçom (separadas por vírgula)</label>
+        <input type="text" id="produto-obs-rapidas" placeholder="Ex: Com açúcar, Sem açúcar, Com gelo, Sem gelo" />
+        <p style="font-size:0.72rem;color:var(--rosa);margin-top:4px;font-weight:600">* Aparecem como botões rápidos para o garçom ao adicionar este produto</p>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>É Pizza?</label>
+          <select id="produto-e-pizza">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>URL da Imagem (opcional)</label>
+          <input type="text" id="produto-imagem" placeholder="https://..." />
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-produto')">Cancelar</button>
+      <button class="btn btn-success" onclick="salvarNovoProduto()"><span class="material-symbols-outlined" style="font-size:16px;">check_circle</span> Cadastrar Produto</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ficha">
+  <div class="modal" style="max-width:680px">
+    <div class="modal-header">
+      <h3 id="modal-ficha-titulo"><span class="material-symbols-outlined" style="font-size:20px;">description</span> Ficha Técnica</h3>
+      <button class="modal-close" onclick="fecharModal('modal-ficha')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="ficha-produto-id" />
+      <div id="ficha-itens-lista"></div>
+      <hr style="margin:16px 0;border:none;border-top:1px solid var(--cinza-medio)">
+      <div style="font-size:0.85rem;font-weight:700;margin-bottom:10px;color:var(--vinho-escuro)">+ Adicionar Insumo</div>
+      <div class="form-row">
+        <div class="form-group"><label>Insumo</label><select id="ficha-novo-insumo"><option value="">Selecione...</option></select></div>
+        <div class="form-group"><label>Quantidade</label><input type="number" id="ficha-nova-qtd" min="0.001" step="0.001" placeholder="0" /></div>
+      </div>
+      <button class="btn btn-success btn-sm" onclick="adicionarItemFicha()">+ Adicionar à Ficha</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-ficha')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-usuario">
+  <div class="modal" style="max-width: 500px;">
+    <div class="modal-header">
+      <h3 id="modal-usuario-titulo"><span class="material-symbols-outlined" style="font-size:20px;">person</span> Novo Usuário</h3>
+      <button class="modal-close" onclick="fecharModal('modal-usuario')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="usuario-id" />
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" id="usuario-nome" placeholder="Ex: João Silva" />
+      </div>
+      <div class="form-group">
+        <label>Login de Acesso</label>
+        <input type="text" id="usuario-login" placeholder="Ex: joao.silva" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Perfil (Cargo)</label>
+          <select id="usuario-perfil">
+            <option value="1">Administrador</option>
+            <option value="2">Garçom</option>
+            <option value="3">Cozinheiro</option>
+            <option value="4">Caixa</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="usuario-ativo">
+            <option value="1">Ativo (Pode logar)</option>
+            <option value="0">Inativo (Bloqueado)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Senha <span style="font-size:0.75rem; color:var(--rosa); font-weight:normal;" id="senha-hint"></span></label>
+        <input type="password" id="usuario-senha" placeholder="Mínimo 6 caracteres" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-usuario')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarUsuario()"><span class="material-symbols-outlined" style="font-size:16px;">save</span> Salvar Usuário</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-confirm" style="z-index: 9999;">
+  <div class="modal confirm-modal">
+    <h3 id="confirm-title">
+      <span class="material-symbols-outlined" id="confirm-icon-span" style="color: #2ecc71; vertical-align: bottom; margin-right: 6px;">done_all</span>
+      <span id="confirm-title-text">Confirmar ação?</span>
+    </h3>
+    <p id="confirm-message">Todos os itens serão afetados.</p>
+    <div class="confirm-actions">
+      <button class="btn confirm-btn-cancel" id="confirm-btn-cancel">Cancelar</button>
+      <button class="btn btn-primary confirm-btn-ok" id="confirm-btn-ok">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-mesas">
+  <div class="modal" style="max-width: 400px;">
+    <div class="modal-header">
+      <h3><span class="material-symbols-outlined" style="font-size:20px;">table_restaurant</span> Adicionar Mesas</h3>
+      <button class="modal-close" onclick="fecharModal('modal-mesas')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Quantas novas mesas deseja adicionar ao salão?</label>
+        <input type="number" id="qtd-novas-mesas" min="1" placeholder="Ex: 5" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="fecharModal('modal-mesas')">Cancelar</button>
+      <button class="btn btn-primary" onclick="confirmarNovasMesas()">
+        <span class="material-symbols-outlined" style="font-size:16px;">add_circle</span> Adicionar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="main-wrapper">
+  <header class="top-header">
+    <div id="page-title">Dashboard</div>
+    <div class="header-actions" style="display: flex; align-items: center; gap: 12px;">
+      <button class="btn btn-sm btn-secondary" onclick="adicionarNovasMesas()" title="Adicionar mais mesas ao salão">
+        <span class="material-symbols-outlined" style="font-size:18px; vertical-align: middle;">table_restaurant</span> + Mesas
+      </button>
+      <div class="badge-conexao connecting" id="badge-conexao">Conectando...</div>
+    </div>
+  </header>
+
+  <main class="main-content">
+
+    <section class="section active" id="section-dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon"><span class="material-symbols-outlined" style="font-size:28px;">table_restaurant</span></div>
+          <div class="kpi-label">Mesas Abertas</div>
+          <div class="kpi-valor" id="kpi-mesas">—</div>
+          <div class="kpi-sub">mesas em atendimento</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon"><span class="material-symbols-outlined" style="font-size:28px;">warning</span></div>
+          <div class="kpi-label">Alertas de Estoque</div>
+          <div class="kpi-valor" id="kpi-alertas">—</div>
+          <div class="kpi-sub">insumos abaixo do mínimo</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon"><span class="material-symbols-outlined" style="font-size:28px;">payments</span></div>
+          <div class="kpi-label">Vendas do Dia</div>
+          <div class="kpi-valor" id="kpi-vendas">—</div>
+          <div class="kpi-sub" id="kpi-vendas-qtd">transações</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon"><span class="material-symbols-outlined" style="font-size:28px;">shopping_cart</span></div>
+          <div class="kpi-label">Produtos Ativos</div>
+          <div class="kpi-valor" id="kpi-produtos">—</div>
+          <div class="kpi-sub">no cardápio</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" class="dashboard-row">
+        <div class="card">
+          <div class="card-header"><h2><span class="material-symbols-outlined" style="font-size:20px;">bar_chart</span> Vendas por Método de Pagamento</h2></div>
+          <div class="card-body"><div class="chart-wrapper" id="chart-vendas"><div class="empty-state">Carregando...</div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2><span class="material-symbols-outlined" style="font-size:20px;">error</span> Alertas de Estoque</h2>
+            <button class="btn btn-sm btn-secondary" onclick="navegarPara('estoque')">Ver Estoque</button>
+          </div>
+          <div class="card-body"><div id="dash-alertas-lista"><div class="empty-state">Carregando...</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="section-estoque">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="material-symbols-outlined" style="font-size:20px;">inventory_2</span> Insumos</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-sm btn-success" onclick="abrirModalLote()"><span class="material-symbols-outlined" style="font-size:16px;">move_to_inbox</span> Entrada de Lote</button>
+            <button class="btn btn-sm" style="background:var(--laranja);color:#fff;" onclick="abrirModalAjuste()"><span class="material-symbols-outlined" style="font-size:16px;">balance</span> Ajuste/Perda</button>
+            <button class="btn btn-sm btn-secondary" onclick="carregarInsumos()">↺ Atualizar</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Nome</th><th>Unidade</th><th>Estoque Atual</th><th>Mínimo</th><th>Alerta</th><th>Custo Unit.</th><th>Ações</th></tr></thead>
+              <tbody id="insumos-tbody"><tr><td colspan="7" class="empty-state">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="section-fichas">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="material-symbols-outlined" style="font-size:20px;">description</span> Fichas Técnicas</h2>
+          <button class="btn btn-sm btn-secondary" onclick="carregarFichas()">↺ Atualizar</button>
+        </div>
+        <div class="card-body">
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Produto</th><th>Categoria</th><th>Preço</th><th>Insumos</th><th>Ações</th></tr></thead>
+              <tbody id="fichas-tbody"><tr><td colspan="5" class="empty-state">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="section-cardapio">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="material-symbols-outlined" style="font-size:20px;">restaurant_menu</span> Cardápio</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-sm btn-success" onclick="abrirModalProduto()"><span class="material-symbols-outlined" style="font-size:16px;">add_circle</span> Novo Produto</button>
+            <button class="btn btn-sm btn-secondary" onclick="carregarCardapio()">↺ Atualizar</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Produto</th><th>Categoria</th><th>Preço</th><th>Disponível</th><th>Ações</th></tr></thead>
+              <tbody id="cardapio-tbody"><tr><td colspan="5" class="empty-state">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <section class="section" id="section-relatorios">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="material-symbols-outlined" style="font-size:20px;">trending_up</span> Vendas — Resumo Detalhado</h2>
+          
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:0.85rem; font-weight:700; color:#fff;">Data:</span>
+            
+            <input type="text" id="filtro-data-relatorio" class="input-data-elegante" placeholder="Selecione..." />
+
+            <button class="btn btn-sm btn-secondary" onclick="carregarRelatorios()">↺ Atualizar</button>
+          </div>
+
+        </div>
+        <div class="card-body"><div id="relatorio-vendas"><div class="empty-state">Carregando...</div></div></div>
+      </div>
+    </section>
+
+    <section class="section" id="section-usuarios">
+      <div class="card">
+        <div class="card-header">
+          <h2><span class="material-symbols-outlined" style="font-size:20px;">group</span> Gestão de Usuários</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-sm btn-success" onclick="abrirModalUsuario()"><span class="material-symbols-outlined" style="font-size:16px;">person_add</span> Novo Usuário</button>
+            <button class="btn btn-sm btn-secondary" onclick="carregarUsuarios()">↺ Atualizar</button>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead><tr><th>Nome</th><th>Login</th><th>Perfil</th><th>Status</th><th>Ações</th></tr></thead>
+              <tbody id="usuarios-tbody"><tr><td colspan="5" class="empty-state">Carregando...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
+<script src="../assets/app.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

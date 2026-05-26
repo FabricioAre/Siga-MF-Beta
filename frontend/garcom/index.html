@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <title>Garçom | Maria Fumaça</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ── HEADER ─────────────────────────────────────────────── -->
+<header class="header">
+  <div class="header__left">
+    <div class="header__logo"><span class="material-symbols-outlined" style="font-size:28px;">train</span></div>
+    <div>
+      <div class="header__title">Maria Fumaça</div>
+      <div class="header__sub">Módulo Garçom</div>
+    </div>
+  </div>
+  <div class="header__right">
+    <div class="header__badge" id="headerBadge">Mesa --</div>
+    <button class="btn-icon" id="btnNotif" title="Notificações">
+      <span class="material-symbols-outlined">notifications</span>
+      <span class="notif-dot" id="notifDot"></span>
+    </button>
+  </div>
+</header>
+
+<!-- ── STEPS BAR ───────────────────────────────────────────── -->
+<div class="steps-bar">
+  <div class="step-item active" id="step1"><span class="step-num">1</span> Mesa</div>
+  <span class="step-sep">›</span>
+  <div class="step-item" id="step2"><span class="step-num">2</span> Fluxo</div>
+  <span class="step-sep">›</span>
+  <div class="step-item" id="step3"><span class="step-num">3</span> Cardápio</div>
+  <span class="step-sep">›</span>
+  <div class="step-item" id="step4"><span class="step-num">4</span> Confirmar</div>
+</div>
+
+<!-- ── NOTIF KDS ────────────────────────────────────────────── -->
+<div class="kds-notif" id="kdsNotif" style="margin:0 1.25rem .5rem">
+  <div class="kds-notif__icon"><span class="material-symbols-outlined">notifications_active</span></div>
+  <div class="kds-notif__body">
+    <h4 id="kdsNotifTitle">Pedido Pronto!</h4>
+    <p id="kdsNotifBody">Leve à mesa</p>
+  </div>
+  <button class="kds-notif__close" id="kdsNotifClose"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+</div>
+
+<!-- ── VIEW 1: MESAS ────────────────────────────────────────── -->
+<section class="view active" id="viewMesa">
+  <div class="search-wrap">
+    <span class="search-icon"><span class="material-symbols-outlined" style="font-size:18px;">search</span></span>
+    <input class="search-input" id="searchMesa" placeholder="Buscar mesa…" autocomplete="off" inputmode="numeric"/>
+    <button class="search-clear" id="clearMesa"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+  </div>
+  <p class="section-title">Selecione a Mesa</p>
+  <div class="mesas-grid" id="mesasGrid">
+    <div class="spinner"></div>
+  </div>
+</section>
+
+<!-- ── VIEW 2: CARDÁPIO ─────────────────────────────────────── -->
+<section class="view" id="viewCardapio">
+  <div class="nav-bar">
+    <button class="btn-back" id="btnVoltarMesa">← Mesa</button>
+    <span class="nav-title">Mesa <span id="mesaLabel">--</span></span>
+  </div>
+  <div class="fluxo-badge" id="fluxoBadge">
+    <span class="fluxo-badge__dot"></span>
+    <span id="fluxoBadgeNome">—</span>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon"><span class="material-symbols-outlined" style="font-size:18px;">search</span></span>
+    <input class="search-input" id="searchProd" placeholder="Buscar produto…" autocomplete="off"/>
+    <button class="search-clear" id="clearProd"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+  </div>
+  <div class="cats-bar" id="catsBar">
+    <button class="cat-btn active" data-cat="">Todos</button>
+  </div>
+  <div class="cardapio-grid" id="cardapioGrid">
+    <div class="spinner"></div>
+  </div>
+</section>
+
+<!-- ── MODAL: SELEÇÃO DE FLUXO (RN01) ──────────────────────── -->
+<div class="modal-overlay" id="modalFluxo">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Como deseja atender?</div>
+    <div class="modal-sub">Escolha o tipo de serviço para carregar<br>o cardápio correto</div>
+    <div class="modal-mesa-info">
+      <span><span class="material-symbols-outlined" style="font-size:18px;">chair</span></span>
+      <strong id="modalMesaNum">--</strong>
+      <span>·</span>
+      <span id="modalMesaCap"><span class="material-symbols-outlined" style="font-size:16px;">person</span> --</span>
+      <span>·</span>
+      <span id="modalMesaLoc">—</span>
+    </div>
+    <div class="fluxo-grid">
+      <div class="fluxo-card" id="btnFluxoRestaurante" role="button" tabindex="0">
+        <div class="fluxo-icon"><span class="material-symbols-outlined" style="font-size:36px;">restaurant</span></div>
+        <div class="fluxo-nome">Restaurante</div>
+        <div class="fluxo-desc">Pratos executivos, massas, grelhados e saladas</div>
+      </div>
+      <div class="fluxo-card fluxo-card--laranja" id="btnFluxoPizzaria" role="button" tabindex="0">
+        <div class="fluxo-icon"><span class="material-symbols-outlined" style="font-size:36px;">local_pizza</span></div>
+        <div class="fluxo-nome">Pizzaria</div>
+        <div class="fluxo-desc">Pizzas inteiras ou meio a meio com até 2 sabores</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PANEL: DETALHES DO ITEM ──────────────────────────────── -->
+<div class="panel-overlay" id="panelOverlay">
+  <div class="panel" id="panelItem">
+    <div class="panel-handle"></div>
+    <div class="panel-banner" id="panelBanner"><span class="material-symbols-outlined" style="font-size:36px;">restaurant</span></div>
+    <div class="panel-nome" id="panelNome">—</div>
+    <div class="panel-desc" id="panelDesc"></div>
+    <div class="panel-preco-wrap">
+      <div class="panel-preco" id="panelPreco">R$ 0,00</div>
+      <div class="panel-preco-rn03" id="panelRN03Hint" style="display:none">(cobrado o maior sabor)</div>
+    </div>
+
+    <!-- Seção Pizza (RN01/RN02) -->
+    <div id="secaoPizza" class="hidden">
+      <div class="form-section">
+        <label class="form-label">Tipo de Pizza</label>
+        <div class="pizza-tipo">
+          <div class="pizza-opt">
+            <input type="radio" name="pizzaTipo" id="tipoPizzaInteira" value="inteira" checked/>
+            <label for="tipoPizzaInteira"><span class="opt-icon"><span class="material-symbols-outlined" style="font-size:18px;">local_pizza</span></span> Inteira</label>
+          </div>
+          <div class="pizza-opt">
+            <input type="radio" name="pizzaTipo" id="tipoPizzaMeio" value="meio"/>
+            <label for="tipoPizzaMeio"><span class="opt-icon">½+½</span> Meio a Meio</label>
+          </div>
+        </div>
+      </div>
+      <div id="secaoMeioMeio" class="hidden">
+        <div class="meio-grid">
+          <div><label class="form-label">1ª Metade</label><select class="form-select" id="sabor1"></select></div>
+          <div><label class="form-label">2ª Metade</label><select class="form-select" id="sabor2"></select></div>
+        </div>
+        <div class="rn02-aviso"><span class="material-symbols-outlined" style="font-size:16px;">warning</span> Máximo de <strong>2 sabores</strong> por pizza (RN02)</div>
+        <div class="rn03-box" id="rn03Box">
+          <span class="material-symbols-outlined" style="font-size:16px;">sell</span> Preço cobrado (maior sabor): <span class="rn03-preco" id="rn03Preco">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quantidade -->
+    <div class="form-section" style="margin-top:.85rem">
+      <label class="form-label">Quantidade</label>
+      <div class="qty-row">
+        <button class="qty-btn" id="btnMenos">−</button>
+        <span class="qty-val" id="qtyVal">1</span>
+        <button class="qty-btn" id="btnMais">+</button>
+      </div>
+    </div>
+
+    <!-- Observações -->
+    <div class="form-section">
+      <label class="form-label">Observações Rápidas</label>
+      <div class="obs-chips" id="obsChips">
+        <!-- Chips gerados dinamicamente por categoria -->
+      </div>
+      <textarea class="form-textarea" id="obsItem" rows="2" placeholder="Outra observação…" maxlength="250"></textarea>
+    </div>
+
+    <button class="btn-primary" id="btnAdicionar">
+      <span class="material-symbols-outlined" style="font-size:18px;">add_shopping_cart</span> Adicionar ao Pedido
+    </button>
+  </div>
+</div>
+
+<!-- ── DRAWER CARRINHO ───────────────────────────────────────── -->
+<div class="drawer-overlay" id="drawerOverlay">
+  <div class="drawer">
+    <div class="drawer__handle"></div>
+    <div class="drawer__header">
+      <span class="drawer__title"><span class="material-symbols-outlined" style="font-size:18px;">shopping_cart</span> Pedido — Mesa <span id="drawerMesaNum">--</span></span>
+      <button class="drawer__close" id="btnFecharDrawer"><span class="material-symbols-outlined" style="font-size:18px;">close</span></button>
+    </div>
+    <div class="drawer__body" id="drawerBody"></div>
+    <div class="drawer__footer">
+      <div class="drawer__total">
+        <span class="drawer__total-label">Total do Pedido</span>
+        <span class="drawer__total-valor" id="drawerTotal">R$ 0,00</span>
+      </div>
+      <button class="btn-success" id="btnEnviarCozinha">
+        <span class="material-symbols-outlined" style="font-size:18px;">skillet</span> Enviar para a Cozinha
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FAB CARRINHO ─────────────────────────────────────────── -->
+<div class="cart-fab" id="cartFab">
+  <button class="cart-fab__btn" id="btnAbrirDrawer">
+    <span class="material-symbols-outlined" style="font-size:18px;">shopping_cart</span> <span class="cart-fab__count" id="cartCount">0</span>
+    iten(s) · <strong id="cartTotal">R$ 0,00</strong>
+  </button>
+</div>
+
+<!-- ── TOASTS ────────────────────────────────────────────────── -->
+<div class="toasts" id="toastsBox"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../assets/app.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

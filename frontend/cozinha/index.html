@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <title>KDS — Cozinha | Maria Fumaça</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="brand-icon"><span class="material-symbols-outlined" style="font-size:28px;">restaurant_menu</span></div>
+    <div class="brand-text">
+      <h1>Maria Fumaça — <em>Cozinha</em></h1>
+      <p>Kitchen Display System · SIGA-MF</p>
+    </div>
+  </div>
+  <div class="clock-wrap">
+    <div class="clock" id="clock">--:--:--</div>
+  </div>
+  <div class="stats">
+    <div class="stat-pill">
+      <span class="stat-dot dot-laranja"></span>
+      <span id="statPendente">0 pendente(s)</span>
+    </div>
+    <div class="stat-pill">
+      <span class="stat-dot dot-verde"></span>
+      <span id="statEmPreparo">0 em preparo</span>
+    </div>
+  </div>
+  <div class="header-btns">
+    <button class="btn-icon-dark" id="btnSom" title="Ligar/Desligar Som">
+      <span class="material-symbols-outlined">notifications</span>
+    </button>
+    <div class="conn-badge">
+      <span class="conn-dot" id="connDot"></span>
+      <span id="connLabel">Conectando…</span>
+    </div>
+  </div>
+</header>
+
+<div class="banner-alerta" id="bannerAlerta">
+  <span class="material-symbols-outlined">warning</span>
+  <span id="bannerTexto">—</span>
+  <button class="banner-alerta__close" id="bannerClose"><span class="material-symbols-outlined" style="font-size: 18px;">close</span></button>
+</div>
+
+<div class="toolbar">
+  <button class="filter-btn active" data-filter="all">Todos</button>
+  <button class="filter-btn" data-filter="pendente" style="display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:16px;">hourglass_empty</span> Pendentes</button>
+  <button class="filter-btn" data-filter="em_producao" style="display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:16px;">local_fire_department</span> Em Preparo</button>
+  <button class="filter-btn" data-filter="pizzaria" style="display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:16px;">local_pizza</span> Pizzaria</button>
+  <button class="filter-btn" data-filter="restaurante" style="display:flex;align-items:center;gap:4px;"><span class="material-symbols-outlined" style="font-size:16px;">restaurant</span> Restaurante</button>
+  <div class="toolbar-sep"></div>
+  <div class="toolbar-spacer"></div>
+  <button class="btn-refresh" id="btnRefresh">
+    <span class="material-symbols-outlined" style="font-size: 18px;">refresh</span>
+    Atualizar
+  </button>
+</div>
+
+<main class="kds-grid" id="kdsGrid">
+  <div class="empty-kds">
+    <span class="material-symbols-outlined empty-kds__icon">check_circle</span>
+    <h2>Cozinha em dia!</h2>
+    <p>Nenhum pedido pendente no momento.</p>
+  </div>
+</main>
+
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3 style="display:flex;align-items:center;justify-content:center;gap:6px;"><span class="material-symbols-outlined" style="color:var(--verde);">done_all</span> Marcar tudo como pronto?</h3>
+    <p id="confirmMsg">Todos os itens do pedido serão marcados como prontos e o garçom será notificado.</p>
+    <div class="confirm-btns">
+      <button class="btn-cancelar" id="btnConfirmCancel">Cancelar</button>
+      <button class="btn-confirmar" id="btnConfirmOk">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toastsEl"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../assets/app.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
